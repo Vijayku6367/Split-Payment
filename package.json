@@ -1,0 +1,14 @@
+{
+  "name": "split-payments-platform",
+  "version": "1.0.0",
+  "description": "A smart contract based split payment automation platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "test": "echo \"No tests yet\""
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "hardhat": "^3.0.17"
+  }
+}
