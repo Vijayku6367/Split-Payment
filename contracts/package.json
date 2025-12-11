@@ -1,7 +1,6 @@
 {
   "name": "contracts",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "hardhat": "^3.0.17"
+    "hardhat": "^2.19.0"
   },
   "dependencies": {
     "adm-zip": "^0.4.16",
@@ -40,5 +39,6 @@
     "undici": "^6.22.0",
     "ws": "^8.18.3",
     "zod": "^3.25.76"
-  }
+  },
+  "description": ""
 }

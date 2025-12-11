@@ -1,0 +1,7 @@
+{
+  "network": "tempo-testnet",
+  "treasury": "0x228F780F91EcD879832A6E353bFf701a3E3A8d3e",
+  "splitFactory": "0xF52BC8F011061b94A5A35B0a72345FFC67AE2F51",
+  "deploymentTimestamp": "2025-12-11T02:40:05.380Z",
+  "deployer": "0xBE72d5F2EF1DaC1c678B9260AcE16d6D999CeC0c"
+}

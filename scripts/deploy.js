@@ -1,72 +1,55 @@
-import { ethers } from 'ethers';
-import * as fs from 'fs';
+// scripts/deploy.js  (CommonJS, Hardhat v2 friendly)
+const fs = require('fs');
+const hre = require('hardhat');
 
-// Load contract ABIs
-const SplitFactoryArtifact = JSON.parse(fs.readFileSync('./artifacts/contracts/SplitFactory.sol/SplitFactory.json', 'utf8'));
-const SplitterArtifact = JSON.parse(fs.readFileSync('./artifacts/contracts/Splitter.sol/Splitter.json', 'utf8'));
-const TreasuryArtifact = JSON.parse(fs.readFileSync('./artifacts/contracts/Treasury.sol/Treasury.json', 'utf8'));
-
-async function deployContracts() {
+async function main() {
   console.log('🚀 Starting contract deployment...');
-  
-  // Connect to Tempo network
-  const provider = new ethers.JsonRpcProvider('https://testnet.rpc.tempo.network');
-  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-  
-  console.log(`Deployer: ${wallet.address}`);
-  console.log(`Balance: ${ethers.formatEther(await provider.getBalance(wallet.address))} TEMPO`);
-  
-  try {
-    // 1. Deploy Treasury
-    console.log('\n📦 Deploying Treasury...');
-    const TreasuryFactory = new ethers.ContractFactory(
-      TreasuryArtifact.abi,
-      TreasuryArtifact.bytecode,
-      wallet
-    );
-    
-    const treasury = await TreasuryFactory.deploy();
-    await treasury.waitForDeployment();
-    const treasuryAddress = await treasury.getAddress();
-    console.log(`✅ Treasury deployed at: ${treasuryAddress}`);
-    
-    // 2. Deploy SplitFactory
-    console.log('\n🏭 Deploying SplitFactory...');
-    const SplitFactoryFactory = new ethers.ContractFactory(
-      SplitFactoryArtifact.abi,
-      SplitFactoryArtifact.bytecode,
-      wallet
-    );
-    
-    const splitFactory = await SplitFactoryFactory.deploy();
-    await splitFactory.waitForDeployment();
-    const factoryAddress = await splitFactory.getAddress();
-    console.log(`✅ SplitFactory deployed at: ${factoryAddress}`);
-    
-    // Save addresses to config file
-    const addresses = {
-      network: 'tempo-testnet',
-      treasury: treasuryAddress,
-      splitFactory: factoryAddress,
-      deploymentTimestamp: new Date().toISOString(),
-      deployer: wallet.address
-    };
-    
-    fs.writeFileSync(
-      './config/deployed-addresses.json',
-      JSON.stringify(addresses, null, 2)
-    );
-    
-    console.log('\n🎉 All contracts deployed successfully!');
-    console.log('\n📝 Contract addresses saved to config/deployed-addresses.json');
-    
-    return addresses;
-    
-  } catch (error) {
-    console.error('❌ Deployment failed:', error);
-    process.exit(1);
+
+  const [deployer] = await hre.ethers.getSigners();
+  console.log('Deployer:', deployer.address);
+  const balance = await deployer.getBalance();
+  console.log('Balance:', hre.ethers.utils.formatEther(balance), 'ETH');
+
+  // Deploy Treasury
+  // Deploy Treasury
+console.log("🚀 Deploying Treasury...");
+const TreasuryFactory = await hre.ethers.getContractFactory("Treasury");
+// Remove the entire object with gas settings
+const treasury = await TreasuryFactory.deploy();
+await treasury.deployed();
+
+console.log("🚀 Deploying SplitFactory...");
+const SplitFactoryFactory = await hre.ethers.getContractFactory("SplitFactory");
+// Remove the entire object with gas settings
+const splitFactory = await SplitFactoryFactory.deploy();
+await splitFactory.deployed();
+  // const SplitterFactory = await hre.ethers.getContractFactory('Splitter');
+  // const splitter = await SplitterFactory.deploy([deployer.address], [10000], hre.ethers.constants.AddressZero);
+  // await splitter.deployed();
+
+  // Save addresses to config file
+  const addresses = {
+    network: hre.network.name,
+    treasury: treasury.address,
+    splitFactory: splitFactory.address,
+    // splitter: splitter ? splitter.address : null,
+    deploymentTimestamp: new Date().toISOString(),
+    deployer: deployer.address,
+  };
+
+  if (!fs.existsSync('./config')) {
+    fs.mkdirSync('./config', { recursive: true });
   }
+
+  fs.writeFileSync('./config/deployed-addresses.json', JSON.stringify(addresses, null, 2));
+  console.log('\n📁 Contract addresses saved to ./config/deployed-addresses.json');
+
+  return addresses;
 }
 
-// Run deployment
-deployContracts();
+main()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error('Deployment failed:', err);
+    process.exit(1);
+  });

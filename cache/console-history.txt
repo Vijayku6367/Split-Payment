@@ -1,0 +1,9 @@
+(await alpha.balanceOf("0xBE72d5F2EF1DaC1c678B9260AcE16d6D999CeC0c")).toString();
+);
+  "0x20c0000000000000000000000000000000000001"
+  ["function balanceOf(address) view returns (uint256)"],
+const alpha = await ethers.getContractAt(
+await ethers.provider.getBalance("0xBE72d5F2EF1DaC1c678B9260AcE16d6D999CeC0c")
+await factory.connect(signer).createSplitter([signer.address], [10000], ethers.constants.AddressZero);
+const [signer] = await ethers.getSigners();        // default acct #0
+await factory.someViewFunction();

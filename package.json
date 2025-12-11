@@ -9,6 +9,11 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "hardhat": "^3.0.17"
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "ethers": "^5.8.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
   }
 }
